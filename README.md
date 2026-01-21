@@ -1,36 +1,37 @@
 # Plotter 60x50 SelfColor V4
 
-Questo sketch Processing converte immagini SVG in GCODE per un plotter da disegno (60x50cm). Supporta la gestione dei colori e genera riempimenti (hatching) avanzati.
+## About
+This Processing sketch is a powerful tool designed to convert SVG vector images into GCODE for a large-format drawing plotter (60x50cm). It is specifically tailored for artistic applications, offering advanced color management and sophisticated hatching algorithms to create pen/brush plot drawings. The system handles complex geometries, ensuring that filled regions respect inner boundaries (holes, nested shapes) for a natural and precise artistic result.
 
-## Funzionalità Principali
+## Key Features
 
-*   **Importazione SVG**: Carica file SVG e analizza le forme e i colori tramite la libreria Geomerative.
-*   **Gestione Colori**: Separa le forme in base al colore per gestire cambi penna o pennello automatici/manuali.
-*   **Hatching (Riempimento)**:
-    *   **Lineare**: Riempimento classico a linee parallele con angolazione variabile.
-    *   **Concentrico (Smart)**: Riempimento che segue il contorno della forma verso l'interno (offset).
-        *   **Gestione Forme Interne**: Rilevamento automatico delle forme interne (buchi, occhi, bocche in ritratti) per evitare sovrapposizioni. Il riempimento "gira intorno" alle forme interne preservandole, invece di coprirle.
-*   **Ottimizzazione Geometria**:
-    *   Sanitizzazione dei vertici per prevenire errori topologici (es. coordinate NaN).
-    *   Correzione automatica di forme aperte o malformate prima dell'elaborazione geometrica (JTS/PGS).
-*   **Generazione GCODE**: Esporta istruzioni GCODE ottimizzate, inclusi movimenti Z (pen up/down), gestione tool change e percorsi di pulizia/ricarica colore.
-*   **Anteprima e Stima**: Visualizzazione a schermo del percorso e stima accurata del tempo di esecuzione.
+*   **SVG Import**: Seamlessly loads SVG files, analyzing shapes and extracting color information using the Geomerative library.
+*   **Color Management**: Automatically separates shapes by color, facilitating automatic or manual pen/brush changes during the plotting process.
+*   **Advanced Hatching (Fill Algorithms)**:
+    *   **Linear Hatching**: Classic parallel line fill with customizable angles.
+    *   **Smart Concentric Hatching**: Contour-following fill that offsets inwards from the shape boundary.
+        *   **Inner Shape Awareness**: Automatically detects and respects inner shapes (e.g., eyes in a face, mouths, holes). The concentric fill "flows around" these inner details rather than covering them, preserving the integrity of the image.
+*   **Geometry Optimization**:
+    *   **Vertex Sanitization**: Proactively cleans geometry data to prevent topological errors (e.g., removing NaN coordinates).
+    *   **Auto-Correction**: Automatically closes open paths and repairs malformed shapes before processing them with JTS/PGS geometry engines.
+*   **GCODE Generation**: Exports optimized GCODE instructions, including Z-axis movements (pen up/down), tool change protocols, and brush cleaning/refilling paths.
+*   **Preview & Estimation**: Provides a real-time on-screen visualization of the toolpath and an accurate estimation of the execution time.
 
-## Librerie Richieste
+## Requirements
 
-Per eseguire questo sketch sono necessarie le seguenti librerie Processing:
-*   **Geomerative**: Per il parsing e la manipolazione vettoriale SVG.
-*   **PGS (Processing Geometry Suite)**: Per operazioni geometriche avanzate (buffering, operazioni booleane, conversioni JTS).
+To run this sketch, the following Processing libraries are required:
+*   **Geomerative**: For parsing and manipulating SVG vector data.
+*   **PGS (Processing Geometry Suite)**: For advanced geometric operations (buffering, boolean operations, JTS conversions).
 
-## Ultimi Aggiornamenti
+## Latest Updates
 
-*   **Fix Hatching Concentrico**: Risolto problema di sovrapposizione su forme interne (es. iridi, bocche). Ora l'algoritmo sottrae correttamente le forme contenute prima di generare le linee concentriche.
-*   **Robustezza**: Aggiunti controlli per `TopologyException` e sanitizzazione proattiva delle `PShape` per evitare crash su SVG complessi o imperfetti.
+*   **Concentric Hatching Fix**: Resolved issues where concentric fills would overlap inner shapes (e.g., irises, mouths). The algorithm now correctly subtracts contained shapes before generating the concentric lines.
+*   **Enhanced Robustness**: Added safeguards against `TopologyException` and implemented proactive `PShape` sanitization to prevent crashes when processing complex or imperfect SVG files.
 
-## Utilizzo
+## Usage
 
-1.  Aprire lo sketch in Processing.
-2.  Avviare l'esecuzione.
-3.  Selezionare un file `.svg` dalla finestra di dialogo.
-4.  Attendere l'elaborazione (visualizzata a console).
-5.  Il GCODE risultante verrà salvato nella sottocartella `GCODE/` insieme a un'anteprima PNG.
+1.  Open the sketch in the Processing IDE.
+2.  Run the sketch.
+3.  Select an `.svg` file from the file dialog.
+4.  Wait for the processing to complete (progress is shown in the console).
+5.  The generated GCODE file will be saved in the `GCODE/` subdirectory, along with a PNG preview of the result.
