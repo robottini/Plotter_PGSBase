@@ -1,0 +1,22 @@
+# Mac
+.DS_Store
+
+# Processing
+applet/
+application.linux32/
+application.linux64/
+application.windows32/
+application.windows64/
+application.macosx/
+out/
+*.class
+
+# GCODE output
+GCODE/
+*.GCODE
+*.gcode
+
+# Images
+*.png
+*.jpg
+*.jpeg
