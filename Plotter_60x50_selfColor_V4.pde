@@ -23,6 +23,7 @@ float step=1.2;
 float stepDisplay; float stepSVG; //provarapp
 boolean mixColors=false; //mescola i colori ogni tanto
 boolean hatching=true; //ottieni i riempimenti a linee parallele
+boolean concentricHatching=true;
 boolean endStop=false;
 //boolean border=true; //ottieni i bordi dell'immagine
 
@@ -310,7 +311,16 @@ void setup() {
     if (p%50 == 0) print(p+"...");
     PShape pCurr = RShapeToPShape(curr);
     if (hatching) {
-      intersection(pCurr, ic, distHatch);
+      if (concentricHatching) {
+        org.locationtech.jts.geom.Geometry hatchGeom = subtractInnerShapes(pCurr, curr, bezier, p);
+        if (hatchGeom == null || hatchGeom.isEmpty()) {
+          intersectionConcentric(pCurr, ic, distHatch);
+        } else {
+          intersectionConcentricGeom(hatchGeom, ic, distHatch);
+        }
+      } else {
+        intersection(pCurr, ic, distHatch);
+      }
     }
     // Riduzione del contorno tramite scala centrata (replica comportamento Geomerative)
     PShape contour = pCurr;
