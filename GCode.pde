@@ -61,12 +61,10 @@ void creaGCODE() {
     buf = ";Tot Dist:"+ nf(totDist, 0, 1);
     OUTPUT.println(buf);
 
-    if (totDist >= maxDist) { //se supera la lunghezza totale verifica quanti pezzi ci vogliono
-      float manca=maxDist-currDist; //verifica quanto manca alla fine della linea corrente
-      RCommand cLine = new RCommand(in.x, in.y, fin.x, fin.y);
-      float rappLung=manca/dimLinea; //rapporto tra il pezzo di linea e tutta la linea per trovare il punto di rottura della linea
-      RPoint onLine1 = cLine.getPoint(rappLung); //prendi il punto sulla linea che corrisponde alla fine della maxDist
-      PVector onLine=new PVector(onLine1.x, onLine1.y);
+    if (totDist >= maxDist) {
+      float manca = maxDist - currDist;
+      float t = manca / dimLinea;
+      PVector onLine = PVector.lerp(in, fin, t);
       buf = ";Break the line:"+nf(dimLinea, 0, 1)+" disTot:"+nf(totDist, 0, 1) + " First Segment:"+nf(manca, 0, 1) + " Second segment:"+nf(dimLinea - manca, 0, 1);
       OUTPUT.println(buf);
       paint(in, onLine, typeLine);  //dipingi la linea che manca alla fine di maxDist7

@@ -308,26 +308,28 @@ void setup() {
     } 
 
     if (p%50 == 0) print(p+"...");
+    PShape pCurr = RShapeToPShape(curr);
     if (hatching) {
-      // Converti RShape in PShape per l'algoritmo di hatching
-      intersection(RShapeToPShape(curr), ic, distHatch); //esegui hatch
+      intersection(pCurr, ic, distHatch);
     }
-    
-    RShape currResize=curr;
-    RPoint originalCenter = curr.getCenter();
-    RPoint[] sb = currResize.getBoundsPoints();
-    RShape Rsb = RShape.createRectangle(sb[0].x, sb[0].y, sb[1].x-sb[0].x, sb[2].y-sb[1].y);
-    boolean isRsbMax = Rsb.getWidth() >= Rsb.getHeight();
-    float maxRsb= isRsbMax ? Rsb.getWidth(): Rsb.getHeight();   //provarapp
-    float factorCurrResize=stepSVG/maxRsb;
-    currResize.scale(1.0-factorCurrResize);
-    RPoint newCenter = curr.getCenter();
-    float dx = originalCenter.x - newCenter.x;
-    float dy = originalCenter.y - newCenter.y;
-  
-  // Apply the translation to restore the center position
-    currResize.translate(dx, dy);
-    formaList.add(new Forma(RShapeToPShape(currResize), ic, 0)); //aggiunge il contorno alle shape
+    // Riduzione del contorno tramite scala centrata (replica comportamento Geomerative)
+    PShape contour = pCurr;
+    float[] bb = getPShapeBounds(contour);
+    if (bb != null) {
+      float dx = bb[2] - bb[0];
+      float dy = bb[3] - bb[1];
+      float maxDim = max(dx, dy);
+      if (maxDim > 0) {
+        float factorCurrResize = stepSVG / maxDim;
+        float scaleFactorShrink = 1.0 - factorCurrResize;
+        float cx = (bb[0] + bb[2]) / 2.0;
+        float cy = (bb[1] + bb[3]) / 2.0;
+        translatePShape(contour, -cx, -cy);
+        scalePShape(contour, scaleFactorShrink);
+        translatePShape(contour, cx, cy);
+      }
+    }
+    formaList.add(new Forma(contour, ic, 0));
     
     
   }
